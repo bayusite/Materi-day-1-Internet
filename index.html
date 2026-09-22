@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Pelatihan: Navigasi Internet Dasar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .module-content { display: none; }
+        .module-content.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mouse-container {
+            width: 120px;
+            height: 180px;
+            background-color: #f8fafc; /* Very light slate */
+            border: 2px solid #cbd5e1;
+            border-radius: 60px 60px 40px 40px;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), inset 0 -5px 15px rgba(0,0,0,0.05);
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        .mouse-btn {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 70px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .mouse-left {
+            left: 0;
+            border-radius: 60px 0 0 0;
+            border-right: 1px solid #cbd5e1;
+        }
+
+        .mouse-right {
+            right: 0;
+            border-radius: 0 60px 0 0;
+            border-left: 1px solid #cbd5e1;
+        }
+        
+        .mouse-wheel {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 24px;
+            background-color: #64748b;
+            border-radius: 6px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        /* Animation classes for mouse clicks */
+        .click-active-left {
+            background-color: #93c5fd; /* Blue 300 */
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2);
+        }
+        
+        .click-active-right {
+            background-color: #fca5a5; /* Red 300 */
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Touchpad Styles */
+        .touchpad-container {
+            width: 130px;
+            height: 90px;
+            background: linear-gradient(to bottom, #f8fafc, #e2e8f0);
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        .touchpad-surface {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 30px;
+            background-color: transparent;
+        }
+        .touchpad-btn {
+            position: absolute;
+            bottom: 0;
+            width: 50%;
+            height: 30px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            background-color: #cbd5e1;
+            border-top: 2px solid #94a3b8;
+        }
+        .touchpad-left {
+            left: 0;
+            border-right: 1px solid #94a3b8;
+            border-bottom-left-radius: 6px;
+        }
+        .touchpad-right {
+            right: 0;
+            border-left: 1px solid #94a3b8;
+            border-bottom-right-radius: 6px;
+        }
+        .click-active-tp-left { background-color: #93c5fd; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .click-active-tp-right { background-color: #fca5a5; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-network-wired text-blue-400 text-xl"></i>
+                <h1 class="font-bold text-lg tracking-wide">Pelatihan Operasional Internet</h1>
+            </div>
+            <div class="text-sm text-slate-400">
+                <span id="progress-text">Modul 1 dari 5</span>
+            </div>
+        </div>
+        <div class="h-1 bg-slate-700 w-full">
+            <div id="progress-bar" class="h-1 bg-blue-500 w-1/5 transition-all duration-500"></div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="hidden lg:flex w-64 flex-col bg-white border-r border-slate-200 overflow-y-auto">
+            <div class="p-4 border-b border-slate-100">
+                <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Daftar Modul</h2>
+            </div>
+            <nav class="flex-1 p-2 space-y-1" id="sidebar-nav">
+                <button onclick="goToModule(0)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-blue-50 text-blue-700" data-index="0">1. Pengantar & Kendali</button>
+                <button onclick="goToModule(1)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" data-index="1">2. Navigasi & Kontrol URL</button>
+                <button onclick="goToModule(2)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" data-index="2">3. Pencarian & Filter</button>
+                <button onclick="goToModule(3)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" data-index="3">4. Tab & Bookmark</button>
+                <button onclick="goToModule(4)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" data-index="4">5. Keamanan & Unduhan</button>
+                <button onclick="goToModule(5)" class="nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors" data-index="5">6. Troubleshooting Error</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 md:p-12 bg-slate-50 relative pb-24 lg:pb-12">
+            
+            <!-- Module 0: Pengantar & Mouse -->
+            <div id="module-0" class="module-content active max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 1</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Pengantar Sistem & Kalibrasi Alat</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p class="text-lg">Sebelum mengoperasikan jaringan internet, mari kita kalibrasi pemahaman terhadap alat kerja dan sistem dasar.</p>
+                    
+                    <div class="bg-slate-800 text-white p-6 rounded-xl shadow-sm mb-6">
+                        <h3 class="font-bold text-blue-400 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-computer-mouse"></i> Kalibrasi Alat Input (Mouse)
+                        </h3>
+                        <p class="text-sm text-slate-300 mb-4">Sering terjadi kesalahan karena penggunaan tombol yang keliru. Ingat panduan teknis ini:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                            <div class="bg-slate-700 p-3 rounded-lg border border-slate-600">
+                                <span class="font-bold text-white block mb-1">Klik Kiri (1x)</span>
+                                <span class="text-slate-300">Tombol Eksekusi. Digunakan untuk memilih menu atau menekan tombol di layar.</span>
+                            </div>
+                            <div class="bg-slate-700 p-3 rounded-lg border border-slate-600">
+                                <span class="font-bold text-white block mb-1">Klik Kiri (2x Cepat)</span>
+                                <span class="text-slate-300">Tombol Start Engine. Khusus untuk membuka program dari layar awal (Desktop).</span>
+                            </div>
+                            <div class="bg-blue-900/50 p-3 rounded-lg border border-blue-500/50">
+                                <span class="font-bold text-blue-300 block mb-1">Klik Kanan (1x)</span>
+                                <span class="text-blue-100">Membuka Kotak Perkakas (Toolbox). Memunculkan menu opsi tambahan.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6 text-center">
+                        <h3 class="font-bold text-slate-800 mb-4">🕹️ Simulasi: Kenali Tombol Alat Input Anda</h3>
+                        <p class="text-sm text-slate-600 mb-6">Arahkan kursor dan klik area tombol kiri atau kanan pada gambar mouse atau touchpad laptop di bawah ini untuk melihat reaksinya.</p>
+                        
+                        <div class="flex flex-col sm:flex-row justify-center items-end gap-12 mb-4">
+                            <!-- Mouse Standard -->
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Mouse Komputer</p>
+                                <div class="mouse-container" id="demo-mouse">
+                                    <div class="mouse-btn mouse-left" onclick="animateInput('demo', 'left')" oncontextmenu="return false;"></div>
+                                    <div class="mouse-wheel"></div>
+                                    <div class="mouse-btn mouse-right" oncontextmenu="animateInput('demo', 'right'); return false;"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Touchpad Laptop -->
+                            <div>
+                                <p class="text-xs font-bold text-slate-500 mb-3 uppercase tracking-wider">Touchpad Laptop</p>
+                                <div class="touchpad-container" id="demo-touchpad">
+                                    <div class="touchpad-surface"></div>
+                                    <div class="touchpad-btn touchpad-left" onclick="animateInput('demo', 'left')" oncontextmenu="return false;"></div>
+                                    <div class="touchpad-btn touchpad-right" oncontextmenu="animateInput('demo', 'right'); return false;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="demo-feedback" class="mt-4 h-6 text-sm font-bold text-slate-700"></div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-server text-blue-500"></i> Analogi Infrastruktur
+                        </h3>
+                        <p class="mb-4">Internet adalah infrastruktur jaringan pipa global. Jika pipa menyalurkan air/gas, internet menyalurkan <strong>data</strong>.</p>
+                        <ul class="space-y-3 list-disc pl-5">
+                            <li><strong>Website (Situs Web):</strong> Dokumen cetak biru atau fasilitas digital spesifik.</li>
+                            <li><strong>Server:</strong> Komputer "gudang utama" yang beroperasi 24 jam.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-toolbox text-blue-500"></i> Pemilihan Perkakas (Jenis-Jenis Browser)
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">Untuk mengakses data dari Server, kita butuh alat peramban. Ibarat berbagai merk alat berat, setiap browser memiliki spesifikasi dan peruntukannya masing-masing:</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <!-- Chrome -->
+                            <div class="border border-slate-200 rounded-lg p-4 flex items-start gap-3 hover:border-blue-300 hover:shadow-sm transition-all group">
+                                <i class="fa-brands fa-chrome text-3xl text-blue-500 mt-1 group-hover:scale-110 transition-transform"></i>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Google Chrome</h4>
+                                    <div class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-plus mr-1"></i> Sangat Cepat & Standar Global</div>
+                                    <div class="text-xs text-rose-500 font-medium mt-0.5"><i class="fa-solid fa-minus mr-1"></i> Rakus RAM (Memori)</div>
+                                </div>
+                            </div>
+                            <!-- Edge -->
+                            <div class="border border-slate-200 rounded-lg p-4 flex items-start gap-3 hover:border-blue-300 hover:shadow-sm transition-all group">
+                                <i class="fa-brands fa-edge text-3xl text-blue-600 mt-1 group-hover:scale-110 transition-transform"></i>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Microsoft Edge</h4>
+                                    <div class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-plus mr-1"></i> Bawaan Windows, Sangat Ringan</div>
+                                    <div class="text-xs text-rose-500 font-medium mt-0.5"><i class="fa-solid fa-minus mr-1"></i> Ekstensi (Add-on) lebih terbatas</div>
+                                </div>
+                            </div>
+                            <!-- Safari -->
+                            <div class="border border-slate-200 rounded-lg p-4 flex items-start gap-3 hover:border-blue-300 hover:shadow-sm transition-all group">
+                                <i class="fa-brands fa-safari text-3xl text-sky-400 mt-1 group-hover:scale-110 transition-transform"></i>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Apple Safari</h4>
+                                    <div class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-plus mr-1"></i> Optimalisasi baterai tinggi</div>
+                                    <div class="text-xs text-rose-500 font-medium mt-0.5"><i class="fa-solid fa-minus mr-1"></i> Eksklusif untuk mesin Apple (Mac)</div>
+                                </div>
+                            </div>
+                            <!-- Firefox -->
+                            <div class="border border-slate-200 rounded-lg p-4 flex items-start gap-3 hover:border-blue-300 hover:shadow-sm transition-all group">
+                                <i class="fa-brands fa-firefox-browser text-3xl text-orange-500 mt-1 group-hover:scale-110 transition-transform"></i>
+                                <div>
+                                    <h4 class="font-bold text-slate-800 text-sm mb-1">Mozilla Firefox</h4>
+                                    <div class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-plus mr-1"></i> Sangat aman untuk privasi</div>
+                                    <div class="text-xs text-rose-500 font-medium mt-0.5"><i class="fa-solid fa-minus mr-1"></i> Tampilan web kadang tidak standar</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 p-5 rounded-lg flex items-start gap-3">
+                            <i class="fa-solid fa-circle-info text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-blue-900 mb-2">Mengapa SOP pelatihan kita menggunakan Chrome / Edge?</h4>
+                                <p class="text-sm text-blue-800 leading-relaxed">Dalam industri, kita membutuhkan standarisasi (seperti standar ISO pada alat ukur). <strong>Google Chrome</strong> memiliki pengguna terbesar di dunia, sehingga hampir seluruh sistem web di internet dirancang agar 100% kompatibel dengannya. <br><br>Sementara itu, <strong>Microsoft Edge</strong> kita jadikan pilihan utama kedua karena merupakan program bawaan (sudah ter-<em>install</em> dari pabrik) di setiap laptop Windows modern, dan mesin utamanya sudah setara dengan Chrome.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 1: Navigasi Dasar & URL -->
+            <div id="module-1" class="module-content max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 2</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Input Koordinat (Address Bar)</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p>Setelah Browser terbuka, instrumen utama Anda adalah <strong>Address Bar</strong> (Bilah Alamat). Fungsinya persis seperti memasukkan koordinat pada alat GPS.</p>
+                    
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg flex gap-3 items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="font-bold text-amber-900 mb-1">Titik Buta Pemula: Pantang Menggunakan Spasi</h4>
+                            <p class="text-sm text-amber-800">Alamat web adalah koordinat absolut. Mengetik spasi (misal: <code>www. google. com</code>) akan membuat sistem kebingungan dan gagal menuju tujuan. <strong>Ketik dengan rapat tanpa spasi.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Simulasi Address Bar -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-2">🕹️ Simulasi Praktik: Memasukkan Koordinat</h3>
+                        <p class="text-sm mb-4">Mari kita uji input koordinat. Ketik persis alamat ini: <strong>www.google.com</strong></p>
+                        
+                        <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-full border border-slate-300 shadow-inner max-w-md focus-within:border-blue-400 focus-within:bg-white transition-colors">
+                            <i class="fa-solid fa-globe text-slate-400 ml-3"></i>
+                            <input type="text" id="sim-url" class="bg-transparent border-none outline-none flex-1 text-slate-700 px-2" placeholder="Ketik alamat di sini..." autocomplete="off">
+                            <button onclick="checkSimURL()" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 py-1.5 text-sm font-medium transition-colors">Buka</button>
+                        </div>
+                        
+                        <div id="sim-url-feedback" class="mt-3 text-sm font-medium hidden flex items-center gap-2 p-3 rounded-lg">
+                            <!-- Feedback injected via JS -->
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-truck-fast text-blue-500"></i> Persneling Navigasi (Back, Forward, Refresh)
+                        </h3>
+                        <p class="text-sm mb-4 text-slate-600">Sama halnya dengan alat berat, browser memiliki tuas kendali untuk pergerakan historis (riwayat) layar Anda yang terletak di sudut kiri atas:</p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                            <div class="flex-1 bg-slate-50 p-4 rounded-lg border border-slate-200 text-center hover:shadow-md transition-shadow cursor-pointer" onclick="simulateNav('back')">
+                                <i class="fa-solid fa-arrow-left text-xl text-slate-700 mb-2 block"></i>
+                                <span class="font-bold text-sm block">Back (Mundur)</span>
+                                <span class="text-xs text-slate-500 mt-1 block">Kembali ke halaman sebelumnya.</span>
+                            </div>
+                            <div class="flex-1 bg-slate-50 p-4 rounded-lg border border-slate-200 text-center hover:shadow-md transition-shadow cursor-pointer opacity-50" onclick="simulateNav('forward')">
+                                <i class="fa-solid fa-arrow-right text-xl text-slate-700 mb-2 block"></i>
+                                <span class="font-bold text-sm block">Forward (Maju)</span>
+                                <span class="text-xs text-slate-500 mt-1 block">Maju ke halaman yang baru saja ditinggalkan.</span>
+                            </div>
+                            <div class="flex-1 bg-slate-50 p-4 rounded-lg border border-slate-200 text-center hover:shadow-md transition-shadow cursor-pointer" onclick="simulateNav('refresh')">
+                                <i class="fa-solid fa-rotate-right text-xl text-slate-700 mb-2 block"></i>
+                                <span class="font-bold text-sm block">Refresh (Segarkan)</span>
+                                <span class="text-xs text-slate-500 mt-1 block">Memuat ulang halaman jika data macet/lambat.</span>
+                            </div>
+                        </div>
+                        <div id="nav-feedback" class="text-sm font-medium hidden p-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 2: Pencarian Data & Filter Iklan -->
+            <div id="module-2" class="module-content max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 3</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Pencarian Data & Membaca Sinyal</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p>Mesin Pencari (seperti Google) adalah buku indeks raksasa. Anda cukup memasukkan kata kunci spesifik (misal: <em>"manual kompresor alpha 500"</em>) dan sistem akan menampilkan referensi yang cocok.</p>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-4">🕹️ Simulasi Praktik: Membedakan Data Asli vs Iklan</h3>
+                        <p class="text-sm mb-4"><strong>Titik Buta Pemula:</strong> Google sering meletakkan Iklan berbayar di urutan teratas. Jika Anda mencari buku manual mesin, Anda harus menghindari mengklik iklan toko yang berjualan mesin.</p>
+                        <p class="text-sm mb-4 font-medium">Berdasarkan hasil pencarian untuk "Manual Kompresor Alpha", mana dokumen teknis yang benar-benar harus Anda klik?</p>
+                        
+                        <!-- Simulasi Hasil Search Google -->
+                        <div class="space-y-4">
+                            <!-- Opsi Iklan -->
+                            <button onclick="checkAd(false, this)" class="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors group">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="font-bold text-xs text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded">Sponsor</span>
+                                    <span class="text-sm text-slate-500">www.tokomesin-makmur.com</span>
+                                </div>
+                                <h4 class="text-blue-600 text-lg group-hover:underline mb-1">Beli Kompresor Alpha 500 - Diskon Akhir Tahun 50%</h4>
+                                <p class="text-sm text-slate-600">Tersedia berbagai macam kompresor industri. Harga termurah, garansi resmi. Beli sekarang juga di toko kami!</p>
+                            </button>
+                            
+                            <!-- Opsi Organik -->
+                            <button onclick="checkAd(true, this)" class="w-full text-left p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors group">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-sm text-slate-500">www.alphaindustries.com > support > manual</span>
+                                </div>
+                                <h4 class="text-blue-600 text-lg group-hover:underline mb-1">Manual Operasional & Spesifikasi Kompresor Alpha 500 (PDF)</h4>
+                                <p class="text-sm text-slate-600">Dokumen teknis resmi. Berisi panduan instalasi, pemecahan masalah (troubleshooting), dan detail kelistrikan tipe 500.</p>
+                            </button>
+                        </div>
+                        
+                        <div id="ad-feedback" class="mt-4 p-4 rounded-lg hidden text-sm">
+                            <!-- Feedback injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 3: Manajemen Tab & Undo -->
+            <div id="module-3" class="module-content max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 4</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Manajemen Ruang Kerja (Tab)</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p>Fitur <strong>Tab</strong> memungkinkan Anda membuka beberapa dokumen sekaligus di satu layar tanpa harus menutup yang lain (seperti menjajarkan blueprint di atas meja).</p>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-4">
+                        <h3 class="font-bold text-slate-800 mb-4">🕹️ Simulasi: Klik Kanan -> Open in New Tab</h3>
+                        <p class="text-sm mb-4">Praktikkan trik operasional terpenting: Arahkan kursor ke tautan di bawah ini, lalu lakukan <strong>Klik Kanan</strong> (bukan klik kiri) untuk membuka opsi.</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-8 items-center">
+                            <!-- Target Link -->
+                            <div class="flex-1 bg-slate-50 p-6 rounded-lg border border-slate-200 w-full relative">
+                                <p class="text-xs text-slate-500 mb-2 uppercase tracking-wide">Area Hasil Pencarian Google</p>
+                                <div id="sim-link-target" class="text-blue-600 text-lg font-medium hover:underline cursor-pointer inline-block" oncontextmenu="showContextMenu(event); return false;" onclick="wrongClick()">
+                                    Spesifikasi Teknis Pompa Sentrifugal Tipe A
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">Dokumen PDF berisi panduan lengkap instalasi dan perawatan unit pompa sentrifugal.</p>
+                                
+                                <!-- Custom Context Menu (Hidden by default) -->
+                                <div id="custom-context-menu" class="hidden absolute bg-white border border-slate-200 shadow-xl rounded-md py-1 w-48 z-50 text-sm">
+                                    <button class="w-full text-left px-4 py-2 hover:bg-slate-100" onclick="successNewTab()">Open link in new tab</button>
+                                    <button class="w-full text-left px-4 py-2 hover:bg-slate-100 text-slate-400 cursor-not-allowed">Open link in new window</button>
+                                    <button class="w-full text-left px-4 py-2 hover:bg-slate-100 text-slate-400 cursor-not-allowed">Copy link address</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Mini Mouse Indicator -->
+                            <div class="w-32 flex-shrink-0 text-center flex flex-col gap-4 items-center">
+                                <div>
+                                    <div class="mouse-container" style="transform: scale(0.5); transform-origin: top center; margin-bottom: -70px;" id="tab-mouse">
+                                        <div class="mouse-btn mouse-left"></div>
+                                        <div class="mouse-wheel"></div>
+                                        <div class="mouse-btn mouse-right"></div>
+                                    </div>
+                                    <p class="text-xs text-slate-500 font-medium">Mouse</p>
+                                </div>
+                                <div>
+                                    <div class="touchpad-container" style="transform: scale(0.6); transform-origin: top center; margin-bottom: -30px;" id="tab-touchpad">
+                                        <div class="touchpad-surface"></div>
+                                        <div class="touchpad-btn touchpad-left"></div>
+                                        <div class="touchpad-btn touchpad-right"></div>
+                                    </div>
+                                    <p class="text-xs text-slate-500 font-medium">Touchpad</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="tab-feedback" class="mt-4 p-4 rounded-lg hidden text-sm"></div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg mt-6">
+                        <h4 class="font-bold text-blue-900 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Pro Tip: Klik Kanan -> Open in New Tab
+                        </h4>
+                        <p class="text-sm text-blue-800">Daripada langsung klik kiri yang akan membuat Anda pindah halaman, cobalah <strong>Klik Kanan</strong> pada hasil pencarian, lalu pilih "Buka di tab baru". Halaman pencarian Anda akan tetap aman di tab awal.</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-4">
+                        <h4 class="font-bold text-slate-800 mb-2 text-red-600 flex items-center gap-2">
+                            <i class="fa-solid fa-life-ring"></i> Sistem Pemulihan Darurat (Fail-Safe)
+                        </h4>
+                        <p class="text-sm mb-4"><strong>Skenario Bencana:</strong> Anda sedang membaca dokumen penting, lalu tangan Anda tidak sengaja mengklik tanda (X) dan dokumen tersebut tertutup.</p>
+                        <p class="text-sm mb-4">Jangan panik dan mencari dari awal. Tekan kombinasi tiga tombol ini di keyboard Anda secara bersamaan:</p>
+                        
+                        <div class="flex justify-center items-center gap-3 my-6">
+                            <div class="px-4 py-2 bg-slate-800 text-white font-mono rounded shadow border-b-4 border-slate-900">Ctrl</div>
+                            <i class="fa-solid fa-plus text-slate-400 text-sm"></i>
+                            <div class="px-4 py-2 bg-slate-800 text-white font-mono rounded shadow border-b-4 border-slate-900">Shift</div>
+                            <i class="fa-solid fa-plus text-slate-400 text-sm"></i>
+                            <div class="px-4 py-2 bg-slate-800 text-white font-mono rounded shadow border-b-4 border-slate-900">T</div>
+                        </div>
+                        
+                        <p class="text-sm text-center text-slate-500 italic">Kombinasi ini akan mengembalikan (Undo) halaman terakhir yang tidak sengaja tertutup.</p>
+                    </div>
+
+                    <div class="bg-slate-800 text-white p-6 rounded-xl shadow-sm mt-6">
+                        <h3 class="font-bold text-amber-400 mb-4 flex items-center gap-2">
+                            <i class="fa-regular fa-star" id="star-icon"></i> Marka Buku (Bookmark / Favorites)
+                        </h3>
+                        <p class="text-sm text-slate-300 mb-4">Jika Anda menemukan dokumen spesifikasi yang sangat penting dan ingin diakses lagi besok, Anda tidak perlu mencarinya dari awal. Cukup tandai koordinatnya dengan fitur <strong>Bookmark</strong>.</p>
+                        
+                        <div class="bg-slate-700 border border-slate-600 rounded-lg p-4 flex items-center justify-between">
+                            <div class="text-sm">
+                                <div class="text-slate-400 text-xs uppercase tracking-wider mb-1">Simulasi Address Bar</div>
+                                <div class="font-medium text-white">www.arsip-manual.com/pompa-sentrifugal</div>
+                            </div>
+                            <button onclick="toggleBookmark(this)" class="w-10 h-10 rounded-full hover:bg-slate-600 flex items-center justify-center transition-colors group">
+                                <i class="fa-regular fa-star text-xl text-slate-400 group-hover:text-amber-400 transition-colors" id="sim-star"></i>
+                            </button>
+                        </div>
+                        <div id="bookmark-feedback" class="mt-3 text-sm text-amber-300 hidden">
+                            <i class="fa-solid fa-check-circle"></i> Koordinat halaman berhasil disimpan ke dalam memori Bookmark! Bintang akan berubah menjadi warna biru/kuning.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module 4: Penyimpanan & Keamanan -->
+            <div id="module-4" class="module-content max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 5</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Unduhan & K3 Digital (Keamanan)</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p>Setelah mengunduh (Download) file referensi, sistem Windows akan mengumpulkannya di satu ruangan khusus. Buka program <strong>File Explorer</strong> (ikon folder kuning), lalu cari direktori bernama <strong>Downloads</strong> di panel kiri.</p>
+
+                    <hr class="border-slate-200">
+
+                    <h3 class="text-xl font-bold text-slate-800">Prinsip Keselamatan (K3 Digital)</h3>
+                    <p>Sama seperti prosedur operasional alat berat, keamanan komputer sangat bergantung pada validasi Anda saat menekan tombol.</p>
+
+                    <div class="bg-blue-50 border border-blue-200 p-6 rounded-xl mt-4">
+                        <h4 class="font-bold text-blue-900 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-blue-600"></i> Validasi Dokumen Resmi
+                        </h4>
+                        <p class="text-sm text-blue-800 mb-4">Sebelum mengunduh (*download*) file, pastikan website tersebut bukan situs pancingan. Periksa 2 indikator di Address Bar:</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
+                                <div class="flex items-center gap-2 text-slate-800 font-bold mb-2">
+                                    <i class="fa-solid fa-lock text-emerald-600"></i> Ikon Gembok (HTTPS)
+                                </div>
+                                <p class="text-xs text-slate-600">Gembok tertutup menandakan jalur data antara Anda dan server telah <strong>dienkripsi (disandikan)</strong> sehingga aman dari penyadapan pihak ketiga.</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-slate-200 hover:border-blue-300 transition-colors">
+                                <div class="flex items-center gap-2 text-slate-800 font-bold mb-2">
+                                    <span class="bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded text-xs font-mono">.go.id</span> Plat Nomor (Domain)
+                                </div>
+                                <p class="text-xs text-slate-600">Perhatikan ekor alamatnya. <strong>.go.id</strong> khusus pemerintah, <strong>.ac.id</strong> untuk universitas. Hindari mengunduh file referensi dari domain gratisan.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-blue-500"></i> Kamus Plat Nomor (Ekstensi Domain)
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">Sama seperti alat berat atau kendaraan operasional yang memiliki seri plat nomor untuk menunjukkan legalitas dan asalnya, website juga memiliki "ekor" alamat yang wajib kita inspeksi sebelum kita mempercayai datanya.</p>
+                        
+                        <div class="space-y-3">
+                            <!-- Level 1: Sangat Aman -->
+                            <div class="flex items-start gap-3 p-3 rounded-lg border border-emerald-200 bg-emerald-50">
+                                <i class="fa-solid fa-building-shield text-emerald-600 mt-1 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-emerald-900 text-sm flex gap-2 items-center mb-1">
+                                        <span class="bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded text-xs font-mono border border-emerald-300">.go.id</span>
+                                        <span class="bg-emerald-200 text-emerald-900 px-1.5 py-0.5 rounded text-xs font-mono border border-emerald-300">.ac.id</span>
+                                    </div>
+                                    <p class="text-xs text-emerald-800"><strong>Sangat Terpercaya (Otoritas Negara).</strong> Hanya bisa didaftarkan oleh Kementerian, Instansi Pemerintah, dan Universitas yang diakui negara.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Level 2: Aman -->
+                            <div class="flex items-start gap-3 p-3 rounded-lg border border-blue-200 bg-blue-50">
+                                <i class="fa-solid fa-briefcase text-blue-600 mt-1 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-blue-900 text-sm flex gap-2 items-center mb-1">
+                                        <span class="bg-blue-200 text-blue-900 px-1.5 py-0.5 rounded text-xs font-mono border border-blue-300">.co.id</span>
+                                    </div>
+                                    <p class="text-xs text-blue-800"><strong>Terpercaya (Komersial/Perusahaan).</strong> Membutuhkan legalitas hukum fisik (SIUP, NPWP Perusahaan, Akta Notaris) untuk mendaftarkannya.</p>
+                                </div>
+                            </div>
+
+                            <!-- Level 3: Hati-hati -->
+                            <div class="flex items-start gap-3 p-3 rounded-lg border border-slate-300 bg-slate-50">
+                                <i class="fa-solid fa-globe text-slate-500 mt-1 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-slate-700 text-sm flex gap-2 items-center mb-1">
+                                        <span class="bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-300">.com</span>
+                                        <span class="bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-300">.net</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600"><strong>Umum / Global.</strong> Bebas dibeli siapa saja di seluruh dunia hanya dengan uang. Pastikan ejaan namanya tidak salah ketik (contoh penipuan: <em>klik-bca.com</em> diubah oknum menjadi <em>kilk-bca.com</em>).</p>
+                                </div>
+                            </div>
+
+                            <!-- Level 4: Bahaya -->
+                            <div class="flex items-start gap-3 p-3 rounded-lg border border-rose-200 bg-rose-50">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-500 mt-1 text-lg"></i>
+                                <div>
+                                    <div class="font-bold text-rose-900 text-sm flex gap-2 items-center mb-1">
+                                        <span class="bg-rose-200 text-rose-900 px-1.5 py-0.5 rounded text-xs font-mono border border-rose-300">.blogspot.com</span>
+                                        <span class="bg-rose-200 text-rose-900 px-1.5 py-0.5 rounded text-xs font-mono border border-rose-300">.wordpress.com</span>
+                                    </div>
+                                    <p class="text-xs text-rose-800"><strong>Sangat Berisiko (Gratisan/Anonim).</strong> Siapa saja bisa membuat website ini secara gratis dalam 5 menit tanpa identitas diri. <strong>Dilarang keras</strong> mengunduh file teknis, regulasi, atau manual alat dari sumber ini.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6">
+                        <h4 class="font-bold text-slate-800 mb-4 bg-white inline-block rounded flex items-center gap-2">
+                            🕹️ Simulasi Praktik: Analisa Plat Nomor (Domain)
+                        </h4>
+                        <p class="text-sm mb-4 bg-slate-50 p-3 rounded shadow-sm border border-slate-100">Skenario: Anda ditugaskan mengunduh <strong>"Dokumen Peraturan Perpajakan Terbaru"</strong>. Dari hasil pencarian di bawah ini, pilih satu-satunya tautan (link) yang memiliki <strong>kode registrasi resmi milik otoritas negara</strong>.</p>
+                        
+                        <div class="space-y-3">
+                            <button onclick="checkDomain('fake', this)" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors group">
+                                <div class="text-xs font-mono text-slate-500 mb-1 group-hover:text-red-500 transition-colors">www.peraturan-pajak-terbaru.blogspot.com</div>
+                                <div class="font-semibold text-blue-600">Download Peraturan Pajak Lengkap (PDF)</div>
+                            </button>
+                            
+                            <button onclick="checkDomain('official', this)" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors group">
+                                <div class="text-xs font-mono text-slate-500 mb-1 group-hover:text-emerald-600 transition-colors">www.pajak.go.id > id > peraturan</div>
+                                <div class="font-semibold text-blue-600">Dokumen Resmi Peraturan Perpajakan RI - DJP</div>
+                            </button>
+
+                            <button onclick="checkDomain('commercial', this)" class="w-full text-left p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors group">
+                                <div class="text-xs font-mono text-slate-500 mb-1 group-hover:text-amber-500 transition-colors">www.konsultanpajakmandiri.co.id</div>
+                                <div class="font-semibold text-blue-600">Rangkuman Pajak Terbaru oleh Konsultan Ahli</div>
+                            </button>
+                        </div>
+                        <div id="domain-feedback" class="mt-4 p-4 rounded-lg hidden text-sm shadow-sm border"></div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 mt-6 relative overflow-hidden">
+                        <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            🕹️ Simulasi Praktik: Ancaman Pop-up Iklan
+                        </h4>
+                        <p class="text-sm mb-4 text-slate-600">Banyak website mencoba menipu Anda agar berlangganan notifikasi spam. Apa yang harus Anda lakukan jika kotak ini tiba-tiba muncul di kiri atas layar Anda?</p>
+                        
+                        <div class="bg-slate-100 p-8 rounded-lg border border-slate-200 flex justify-center items-center relative">
+                            <div class="bg-white shadow-2xl rounded-lg border border-slate-200 w-80 overflow-hidden relative z-10 animate-bounce" style="animation-iteration-count: 2;">
+                                <div class="p-4 flex gap-3">
+                                    <i class="fa-solid fa-bell text-blue-500 text-xl mt-1"></i>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">www.berita-heboh-sekali.com</p>
+                                        <p class="text-xs text-slate-600 mt-1">ingin mengirimkan notifikasi kepada Anda.</p>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 p-2 flex justify-end gap-2 border-t border-slate-200">
+                                    <button onclick="checkPopup(true, this)" class="px-4 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-200 rounded transition-colors">Block</button>
+                                    <button onclick="checkPopup(false, this)" class="px-4 py-1.5 text-xs font-bold text-blue-600 hover:bg-blue-50 rounded transition-colors">Allow</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="popup-feedback" class="mt-4 p-4 rounded-lg hidden text-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="module-5" class="module-content max-w-3xl mx-auto">
+                <div class="mb-2 text-blue-600 font-semibold text-sm tracking-wider uppercase">Bagian 6</div>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Troubleshooting (Analisa Kendala Error)</h2>
+                
+                <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                    <p>Sama seperti alat berat, terkadang koneksi internet atau server tujuan mengalami malfungsi. Berikut adalah panel indikator masalah yang sering muncul di layar dan prosedur operasional standar (SOP) untuk mengatasinya.</p>
+                    
+                    <!-- Grid Layout for Error Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        
+                        <!-- Error 1: No Internet / DNS -->
+                        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+                            <div class="bg-slate-50 border-b border-slate-200 p-3 flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                </div>
+                                <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase ml-2">Timeout</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="text-center mb-6">
+                                    <div class="w-16 h-16 mx-auto bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-wifi text-3xl text-slate-400"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-lg leading-tight">Situs tidak dapat dijangkau</h4>
+                                    <p class="text-[11px] font-mono text-slate-500 mt-2 bg-slate-100 inline-block px-2 py-1 rounded">ERR_TIMED_OUT</p>
+                                </div>
+                                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 h-full flex flex-col">
+                                    <span class="font-bold text-blue-900 block mb-2 flex items-center gap-2 text-sm">
+                                        <i class="fa-solid fa-screwdriver-wrench text-blue-600"></i> Analisa & Tindakan:
+                                    </span>
+                                    <ul class="list-disc pl-5 space-y-1 text-sm text-slate-600 mb-4">
+                                        <li>Cek indikator Wi-Fi/Kabel LAN di layar bawah.</li>
+                                        <li>Pastikan ketikan alamat di atas tidak ada spasi.</li>
+                                    </ul>
+                                    <div class="mt-auto bg-white p-3 rounded-lg border border-blue-200 shadow-sm">
+                                        <span class="font-bold text-blue-800 text-xs flex items-center gap-1.5 mb-1.5">
+                                            <i class="fa-solid fa-rotate-right text-blue-500"></i> Sinyal Lemah? Refresh Saja
+                                        </span>
+                                        <p class="text-[11px] text-slate-600 leading-relaxed">Ibarat HT yang sinyalnya goyah tertiup angin. Menekan tombol <strong>Refresh</strong> berkali-kali sangat wajar dan <strong>100% aman</strong>. Sistem hanya meminta koneksi ulang tanpa merusak mesin.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error 2: 404 Not Found -->
+                        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+                            <div class="bg-slate-50 border-b border-slate-200 p-3 flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                </div>
+                                <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase ml-2">Missing</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="text-center mb-6">
+                                    <div class="w-16 h-16 mx-auto bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fa-regular fa-file-excel text-3xl text-slate-400"></i>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-3xl tracking-wider leading-none">404</h4>
+                                    <p class="text-sm font-bold text-slate-500 mt-2">Page Not Found</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 h-full flex flex-col">
+                                    <span class="font-bold text-slate-700 block mb-2 flex items-center gap-2 text-sm">
+                                        <i class="fa-solid fa-magnifying-glass text-slate-500"></i> Analisa & Tindakan:
+                                    </span>
+                                    <p class="text-sm text-slate-600 leading-relaxed mb-4">Ibarat Anda menuju rak gudang yang benar, tapi laci dokumennya sudah dipindah/dihapus oleh pemilik website.</p>
+                                    <div class="mt-auto bg-white p-3 rounded-lg border border-slate-200 shadow-sm text-center">
+                                        <p class="text-xs font-bold text-slate-700">Tekan tombol <i class="fa-solid fa-arrow-left mx-1 text-slate-500"></i> Back (Mundur)</p>
+                                        <p class="text-[11px] text-slate-500 mt-1">Lalu pilih hasil pencarian Google yang lain.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error 3: Server Error -->
+                        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+                            <div class="bg-slate-50 border-b border-slate-200 p-3 flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                </div>
+                                <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase ml-2">Server Down</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="text-center mb-6">
+                                    <div class="w-16 h-16 mx-auto bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-server text-3xl text-slate-400"></i>
+                                    </div>
+                                    <h4 class="font-black text-slate-800 text-2xl leading-none">500 / 503</h4>
+                                    <p class="text-sm font-bold text-slate-500 mt-2">Internal Server Error</p>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 h-full flex flex-col">
+                                    <span class="font-bold text-slate-700 block mb-2 flex items-center gap-2 text-sm">
+                                        <i class="fa-solid fa-industry text-slate-500"></i> Analisa & Tindakan:
+                                    </span>
+                                    <p class="text-sm text-slate-600 leading-relaxed mb-4">Mesin pabrik (Server) milik pihak website sedang lumpuh atau dalam masa perawatan berkala.</p>
+                                    <div class="mt-auto bg-amber-50 p-3 rounded-lg border border-amber-200 shadow-sm text-center">
+                                        <p class="text-xs font-bold text-amber-900">Bukan Rusak di Laptop Anda</p>
+                                        <p class="text-[11px] text-amber-800 mt-1">Jangan panik. Tinggalkan halaman ini dan coba akses kembali 1-2 jam kemudian.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error 4: Privacy Error -->
+                        <div class="bg-white rounded-xl shadow-md border border-rose-200 overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
+                            <div class="bg-rose-50 border-b border-rose-100 p-3 flex items-center gap-2">
+                                <div class="flex gap-1.5">
+                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <div class="w-3 h-3 rounded-full bg-slate-300"></div>
+                                    <div class="w-3 h-3 rounded-full bg-slate-300"></div>
+                                </div>
+                                <span class="text-[11px] font-bold tracking-widest text-rose-500 uppercase ml-2">Warning</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <div class="text-center mb-6">
+                                    <div class="w-16 h-16 mx-auto bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fa-solid fa-triangle-exclamation text-3xl text-rose-500"></i>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 text-lg leading-tight">Koneksi Tidak Pribadi</h4>
+                                    <p class="text-[11px] font-mono text-slate-500 mt-2 bg-slate-100 inline-block px-2 py-1 rounded">ERR_CERT_INVALID</p>
+                                </div>
+                                <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 h-full flex flex-col">
+                                    <span class="font-bold text-rose-800 block mb-2 flex items-center gap-2 text-sm">
+                                        <i class="fa-solid fa-shield-virus text-rose-600"></i> Analisa & Tindakan:
+                                    </span>
+                                    <p class="text-sm text-slate-700 leading-relaxed mb-4">Sertifikat keamanan (gembok) web telah kedaluwarsa atau palsu. Ada potensi penyadapan data.</p>
+                                    <div class="mt-auto bg-white p-3 rounded-lg border border-rose-200 shadow-sm text-center">
+                                        <p class="text-xs font-bold text-rose-700">Tindakan SOP Aman:</p>
+                                        <p class="text-[11px] text-slate-600 mt-1">Tutup <strong>(Close Tab)</strong> halaman ini segera. Jangan pernah klik "Lanjutkan" atau memasukkan kata sandi!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Floating Bottom Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 z-20 lg:static lg:bg-transparent lg:border-none lg:p-0">
+        <div class="max-w-3xl mx-auto flex justify-between items-center lg:px-8 lg:pb-8 lg:pt-4">
+            <button id="btn-prev" onclick="prevModule()" class="px-5 py-2.5 rounded-lg font-medium text-slate-600 bg-white border border-slate-300 shadow-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i> Sebelumnya
+            </button>
+            <button id="btn-next" onclick="nextModule()" class="px-5 py-2.5 rounded-lg font-medium text-white bg-blue-600 shadow-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2">
+                Selanjutnya <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let currentModuleIndex = 0;
+        const totalModules = 6;
+
+        function showMessage(elementId, isSuccess, message) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = isSuccess 
+                ? `<i class="fa-solid fa-circle-check text-green-600 text-lg mt-0.5"></i> <div class="text-green-900">${message}</div>`
+                : `<i class="fa-solid fa-triangle-exclamation text-amber-600 text-lg mt-0.5"></i> <div class="text-amber-900">${message}</div>`;
+            el.className = `mt-3 text-sm font-medium flex items-start gap-2 p-3 rounded-lg ${isSuccess ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`;
+            el.style.display = 'flex';
+        }
+
+        // Navigation logic
+        function updateUI() {
+            document.querySelectorAll('.module-content').forEach((el, index) => {
+                if(index === currentModuleIndex) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.nav-btn').forEach((btn, index) => {
+                if(index === currentModuleIndex) {
+                    btn.className = 'nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors bg-blue-50 text-blue-700';
+                } else {
+                    btn.className = 'nav-btn w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors';
+                }
+            });
+
+            const progressPercent = ((currentModuleIndex + 1) / totalModules) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('progress-text').innerText = `Modul ${currentModuleIndex + 1} dari ${totalModules}`;
+
+            document.getElementById('btn-prev').disabled = currentModuleIndex === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentModuleIndex === totalModules - 1) {
+                btnNext.innerHTML = '<i class="fa-solid fa-flag-checkered"></i> Selesai';
+                btnNext.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                btnNext.classList.add('bg-green-600', 'hover:bg-green-700');
+            } else {
+                btnNext.innerHTML = 'Selanjutnya <i class="fa-solid fa-arrow-right"></i>';
+                btnNext.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                btnNext.classList.remove('bg-green-600', 'hover:bg-green-700');
+            }
+            document.querySelector('main').scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToModule(index) {
+            if (index >= 0 && index < totalModules) {
+                currentModuleIndex = index;
+                updateUI();
+            }
+        }
+        function nextModule() { if (currentModuleIndex < totalModules - 1) goToModule(currentModuleIndex + 1); }
+        function prevModule() { if (currentModuleIndex > 0) goToModule(currentModuleIndex - 1); }
+
+        function animateInput(baseId, side) {
+            // Animate Standard Mouse
+            const mouseEl = document.getElementById(`${baseId}-mouse`);
+            if (mouseEl) {
+                const targetClass = side === 'left' ? 'mouse-left' : 'mouse-right';
+                const activeClass = side === 'left' ? 'click-active-left' : 'click-active-right';
+                const btnEl = mouseEl.querySelector(`.${targetClass}`);
+                btnEl.classList.add(activeClass);
+                setTimeout(() => btnEl.classList.remove(activeClass), 200);
+            }
+
+            // Animate Touchpad
+            const touchpadEl = document.getElementById(`${baseId}-touchpad`);
+            if (touchpadEl) {
+                const targetClassTp = side === 'left' ? 'touchpad-left' : 'touchpad-right';
+                const activeClassTp = side === 'left' ? 'click-active-tp-left' : 'click-active-tp-right';
+                const btnElTp = touchpadEl.querySelector(`.${targetClassTp}`);
+                btnElTp.classList.add(activeClassTp);
+                setTimeout(() => btnElTp.classList.remove(activeClassTp), 200);
+            }
+            
+            // For the demo area, show text
+            if(baseId === 'demo') {
+                const feedbackEl = document.getElementById('demo-feedback');
+                if(side === 'left') {
+                    feedbackEl.innerHTML = '<span class="text-blue-600">Klik Kiri (Eksekusi) Terdeteksi!</span>';
+                } else {
+                    feedbackEl.innerHTML = '<span class="text-red-500">Klik Kanan (Buka Opsi) Terdeteksi!</span>';
+                }
+                setTimeout(() => { document.getElementById('demo-feedback').innerHTML = ''; }, 1000);
+            }
+        }
+
+        // Functions to preview input clicks on hover for certain buttons
+        function previewInput(baseId, side) {
+             const mouseEl = document.getElementById(`${baseId}-mouse`);
+             if(mouseEl) {
+                 const targetClass = side === 'left' ? 'mouse-left' : 'mouse-right';
+                 mouseEl.querySelector(`.${targetClass}`).style.backgroundColor = side === 'left' ? '#bfdbfe' : '#fecaca';
+             }
+             const touchpadEl = document.getElementById(`${baseId}-touchpad`);
+             if(touchpadEl) {
+                 const targetClassTp = side === 'left' ? 'touchpad-left' : 'touchpad-right';
+                 touchpadEl.querySelector(`.${targetClassTp}`).style.backgroundColor = side === 'left' ? '#bfdbfe' : '#fecaca';
+             }
+        }
+        function resetInput(baseId) {
+             const mouseEl = document.getElementById(`${baseId}-mouse`);
+             if(mouseEl) {
+                 mouseEl.querySelector('.mouse-left').style.backgroundColor = '';
+                 mouseEl.querySelector('.mouse-right').style.backgroundColor = '';
+             }
+             const touchpadEl = document.getElementById(`${baseId}-touchpad`);
+             if(touchpadEl) {
+                 touchpadEl.querySelector('.touchpad-left').style.backgroundColor = '';
+                 touchpadEl.querySelector('.touchpad-right').style.backgroundColor = '';
+             }
+        }
+
+        function showContextMenu(e) {
+            e.preventDefault(); // Prevent default browser context menu
+            animateInput('tab', 'right');
+            
+            const menu = document.getElementById('custom-context-menu');
+            const targetRect = document.getElementById('sim-link-target').getBoundingClientRect();
+            const containerRect = document.getElementById('sim-link-target').parentElement.getBoundingClientRect();
+            
+            // Position the menu relative to the container
+            menu.style.left = `${e.clientX - containerRect.left}px`;
+            menu.style.top = `${e.clientY - containerRect.top + 10}px`;
+            menu.classList.remove('hidden');
+        }
+
+        function wrongClick() {
+            animateInput('tab', 'left');
+            document.getElementById('custom-context-menu').classList.add('hidden');
+            showMessage('tab-feedback', false, 'Anda melakukan <strong>Klik Kiri</strong>. Ini akan membuat Anda berpindah halaman dan menimpa hasil pencarian utama Anda. Cobalah lakukan <strong>Klik Kanan</strong> pada teks tautan biru tersebut.');
+        }
+
+        function successNewTab() {
+            animateInput('tab', 'left'); // Left click on the menu item
+            document.getElementById('custom-context-menu').classList.add('hidden');
+            showMessage('tab-feedback', true, '<strong>Sempurna!</strong> Anda telah membuka dokumen tersebut di ruang kerja baru tanpa menghilangkan daftar pencarian utama Anda.');
+        }
+
+        // Hide context menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('custom-context-menu');
+            if (menu && !menu.classList.contains('hidden') && e.target.id !== 'sim-link-target') {
+                menu.classList.add('hidden');
+            }
+        });
+
+        // Simulation 1: URL Input
+        function checkSimURL() {
+            const inputVal = document.getElementById('sim-url').value.toLowerCase();
+            if (inputVal === 'www.google.com') {
+                showMessage('sim-url-feedback', true, 'Tepat sekali! Titik koordinat terbaca dengan presisi tanpa celah (spasi). Sistem akan mengeksekusi perintah.');
+            } else if (inputVal.includes(' ')) {
+                showMessage('sim-url-feedback', false, 'Sistem mendeteksi adanya karakter <b>Spasi</b>. Seperti koordinat pada peta, URL harus ditulis rapat secara berkesinambungan. Coba hapus spasinya.');
+            } else if (inputVal === '') {
+                showMessage('sim-url-feedback', false, 'Bilah alamat masih kosong. Silakan ketik <b>www.google.com</b>');
+            } else {
+                showMessage('sim-url-feedback', false, 'Alamat tidak dikenali. Periksa ejaan Anda, ketik persis: <b>www.google.com</b>');
+            }
+        }
+        document.getElementById('sim-url').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkSimURL();
+        });
+
+        // Simulation 2: Ads vs Organic
+        function checkAd(isOrganic, buttonEl) {
+            const buttons = buttonEl.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-blue-500', 'bg-blue-50');
+            });
+            buttonEl.classList.add('ring-2', 'ring-blue-500', 'bg-blue-50');
+
+            if (isOrganic) {
+                showMessage('ad-feedback', true, 'Tepat sekali! Anda berhasil memfilter informasi organik. Dokumen ini adalah dokumen teknis murni dari server pabrikannya langsung tanpa afiliasi iklan.');
+            } else {
+                showMessage('ad-feedback', false, 'Hati-hati! Terdapat label <b>Sponsor</b> di sudut tautan ini. Ini adalah iklan berbayar dari toko mesin. Mesin pencari meletakkannya di atas karena mereka membayar, bukan karena ini adalah dokumen manual yang Anda cari.');
+            }
+        }
+
+        // Simulation 4: Pop-ups
+        function checkPopup(isBlocked, buttonEl) {
+            animateInput('demo', 'left'); // Menggunakan mouse utama/umum
+            
+            if (isBlocked) {
+                showMessage('popup-feedback', true, '<strong>Tindakan K3 Digital yang Luar Biasa!</strong> Menekan "Block" (Blokir) akan memotong upaya website tersebut untuk mengirimkan notifikasi. Layar Anda akan tetap bersih dan sistem komputer tidak terbebani proses latar belakang.');
+            } else {
+                showMessage('popup-feedback', false, '<strong>Tindakan Berbahaya.</strong> Jika Anda menekan "Allow" pada website yang belum diverifikasi, Anda memberikan akses bagi mereka untuk mengirim pesan *pop-up* kapan saja ke layar Anda (sering kali berisi iklan spam atau jebakan pancingan virus). Biasakan tekan <strong>Block</strong>.');
+            }
+        }
+
+        function checkDomain(type, buttonEl) {
+            // Reset semua warna tombol terlebih dahulu
+            const buttons = buttonEl.parentElement.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-emerald-500', 'ring-red-500', 'ring-amber-500', 'bg-emerald-50', 'bg-red-50', 'bg-amber-50');
+            });
+            
+            const feedbackEl = document.getElementById('domain-feedback');
+            feedbackEl.style.display = 'block';
+
+            // Memberikan umpan balik sesuai pilihan
+            if (type === 'official') {
+                buttonEl.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+                feedbackEl.className = 'mt-4 p-4 rounded-lg text-sm shadow-sm border bg-emerald-50 border-emerald-200 text-emerald-900';
+                feedbackEl.innerHTML = '<strong>Tepat Sekali! (<span class="font-mono bg-emerald-100 px-1 rounded border border-emerald-300">.go.id</span>)</strong><br>Ini adalah plat nomor resmi pemerintah. Domain ini tidak bisa dibeli sembarangan, pendaftarannya membutuhkan SK Menteri/Instansi terkait. Ini adalah sumber data regulasi yang paling valid dan aman.';
+            } else if (type === 'fake') {
+                buttonEl.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
+                feedbackEl.className = 'mt-4 p-4 rounded-lg text-sm shadow-sm border bg-red-50 border-red-200 text-red-900';
+                feedbackEl.innerHTML = '<strong>Sangat Berbahaya! (<span class="font-mono bg-red-100 px-1 rounded border border-red-300">.blogspot.com</span>)</strong><br>Itu adalah domain blog gratisan. Siapa saja bisa membuatnya dalam waktu 5 menit tanpa identitas. Mengunduh file teknis atau regulasi dari situs gratisan memiliki risiko tinggi disusupi virus atau menerima data yang telah dimanipulasi.';
+            } else if (type === 'commercial') {
+                buttonEl.classList.add('ring-2', 'ring-amber-500', 'bg-amber-50');
+                feedbackEl.className = 'mt-4 p-4 rounded-lg text-sm shadow-sm border bg-amber-50 border-amber-200 text-amber-900';
+                feedbackEl.innerHTML = '<strong>Kurang Tepat. (<span class="font-mono bg-amber-100 px-1 rounded border border-amber-300">.co.id</span>)</strong><br>Ini adalah website milik Perusahaan/Komersial. Meski mereka adalah entitas hukum yang sah (bukan penipu), namun untuk mencari <em>dokumen peraturan asli milik negara</em>, kita harus mengambilnya langsung dari "gudang" kementeriannya, bukan dari rangkuman pihak ketiga.';
+            }
+        }
+
+        function simulateNav(action) {
+            const feedback = document.getElementById('nav-feedback');
+            feedback.style.display = 'block';
+            if(action === 'back') {
+                feedback.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Mengeksekusi perintah <b>Back</b>: Sistem memanggil ulang memori halaman yang Anda buka sebelumnya.';
+            } else if(action === 'forward') {
+                feedback.innerHTML = '<i class="fa-solid fa-ban text-amber-600"></i> Tombol <b>Forward</b> saat ini redup (tidak aktif) karena Anda sedang berada di halaman paling depan dari riwayat navigasi Anda.';
+            } else if(action === 'refresh') {
+                feedback.innerHTML = '<i class="fa-solid fa-rotate-right fa-spin"></i> Mengeksekusi perintah <b>Refresh</b>: Memaksa sistem untuk menarik ulang data/gambar terbaru dari server...';
+            }
+            // Berikan animasi kedip pada elemen yang diklik
+            setTimeout(() => { feedback.style.display = 'none'; }, 5000);
+        }
+
+        function toggleBookmark(btn) {
+            animateInput('demo', 'left'); // Menggunakan fungsi animasi input jika tersedia
+            const icon = document.getElementById('sim-star');
+            const feedback = document.getElementById('bookmark-feedback');
+            
+            if(icon.classList.contains('fa-regular')) {
+                // Activate bookmark
+                icon.classList.remove('fa-regular', 'text-slate-400');
+                icon.classList.add('fa-solid', 'text-amber-400');
+                feedback.style.display = 'block';
+                document.getElementById('star-icon').classList.replace('fa-regular', 'fa-solid');
+            } else {
+                // Deactivate bookmark
+                icon.classList.add('fa-regular', 'text-slate-400');
+                icon.classList.remove('fa-solid', 'text-amber-400');
+                feedback.style.display = 'none';
+                document.getElementById('star-icon').classList.replace('fa-solid', 'fa-regular');
+            }
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>
